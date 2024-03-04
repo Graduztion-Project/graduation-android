@@ -3,7 +3,6 @@ package com.catholic.graduation.app.di
 import com.catholic.graduation.BuildConfig
 import com.catholic.graduation.app.DataStoreManager
 import com.catholic.graduation.config.AccessTokenInterceptor
-import com.catholic.graduation.config.BearerInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -48,21 +47,21 @@ object NetworkModule {
     fun provideOkHttpClient(
         httpLoggingInterceptor: HttpLoggingInterceptor,
         accessTokenInterceptor: AccessTokenInterceptor,
-        bearerInterceptor: BearerInterceptor
+        //bearerInterceptor: BearerInterceptor
     ): OkHttpClient = OkHttpClient.Builder()
         .readTimeout(30000, TimeUnit.MILLISECONDS)
         .connectTimeout(30000, TimeUnit.MILLISECONDS)
         .addInterceptor(httpLoggingInterceptor)
         .addNetworkInterceptor(accessTokenInterceptor)
-        .addInterceptor(bearerInterceptor)
         .build()
+    //        .addInterceptor(bearerInterceptor)
 
     @Provides
     fun provideAccessTokenInterceptor(dataStoreManager: DataStoreManager): AccessTokenInterceptor =
         AccessTokenInterceptor(dataStoreManager)
 
-    @Provides
-    fun provideBearerInterceptor(dataStoreManager: DataStoreManager): BearerInterceptor =
-        BearerInterceptor(dataStoreManager)
+//    @Provides
+//    fun provideBearerInterceptor(dataStoreManager: DataStoreManager): BearerInterceptor =
+//        BearerInterceptor(dataStoreManager)
 
 }
