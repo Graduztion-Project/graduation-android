@@ -29,7 +29,7 @@ class LoginViewModel @Inject constructor() : ViewModel() {
     val pw = MutableStateFlow("")
 
     fun login(){
-
+        // TODO 로그인 api 연결
     }
 
     fun navigateToFindAccount() {
@@ -49,6 +49,5 @@ class LoginViewModel @Inject constructor() : ViewModel() {
             _event.emit(LoginEvent.NavigateToBack)
         }
     }
-
 
 }

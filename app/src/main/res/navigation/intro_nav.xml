@@ -7,6 +7,15 @@
     <fragment
         android:id="@+id/login_fragment"
         android:name="com.catholic.graduation.presentation.ui.intro.login.LoginFragment"
-        android:label="login" />
+        android:label="login" >
+        <action
+            android:id="@+id/action_login_fragment_to_signupFragment"
+            app:destination="@id/signup_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/signup_fragment"
+        android:name="com.catholic.graduation.presentation.ui.intro.signup.SignupFragment"
+        android:label="signup" />
 
 </navigation>

@@ -9,7 +9,7 @@
 
         <variable
             name="vm"
-            type="com.catholic.graduation.presentation.ui.intro.login.LoginViewModel" />
+            type="com.catholic.graduation.presentation.ui.intro.signup.SignupViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,24 +39,24 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:backgroundTint="@color/darkgray2"
-            android:hint="아이디 입력하기"
+            android:hint="이메일 형식으로 입력"
             android:inputType="textEmailAddress"
             android:text="@={vm.id}"
-            android:textColor="@color/black"
             android:textColorHint="@color/darkgray1"
+            app:etStateColor="@{vm.uiState.idState}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_id_label" />
 
-        <ImageView
-            android:id="@+id/iv_error"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_text_error"
-            android:visibility="@{vm.warningText.blank? View.INVISIBLE : View.VISIBLE}"
-            app:layout_constraintBottom_toBottomOf="@id/et_id"
-            app:layout_constraintEnd_toEndOf="@id/et_id"
-            app:layout_constraintTop_toTopOf="@id/et_id" />
+        <!--        <ImageView-->
+        <!--            android:id="@+id/iv_error"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:src="@drawable/ic_text_error"-->
+        <!--            android:visibility="@{vm.warningText.blank? View.INVISIBLE : View.VISIBLE}"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@id/et_id"-->
+        <!--            app:layout_constraintEnd_toEndOf="@id/et_id"-->
+        <!--            app:layout_constraintTop_toTopOf="@id/et_id" />-->
 
         <TextView
             android:id="@+id/tv_text_warning"
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:text="계정 정보를 다시 확인해주세요"
             android:textColor="@color/red"
-            android:visibility="@{vm.warningText.blank? View.INVISIBLE : View.VISIBLE}"
+            app:helperMessage="@{vm.uiState.idState}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/et_id" />
@@ -85,14 +85,51 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:backgroundTint="@color/darkgray2"
-            android:hint="비밀번호 입력하기"
-            android:text="@={vm.pw}"
+            android:hint="대문자, 특수 문자, 숫자 1개 이상"
             android:inputType="textPassword"
-            android:textColor="@color/black"
+            android:text="@={vm.pw}"
             android:textColorHint="@color/darkgray1"
+            app:etStateColor="@{vm.uiState.pwState}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_pw_label" />
+
+        <TextView
+            android:id="@+id/tv_pw_chk_label"
+            style="@style/TextSmallBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="비밀번호 확인"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_pw" />
+
+        <EditText
+            android:id="@+id/et_pw_chk"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:backgroundTint="@color/darkgray2"
+            android:hint="비밀번호 확인 입력"
+            android:inputType="textPassword"
+            android:text="@={vm.pw_chk}"
+            android:textColor="@color/black"
+            android:textColorHint="@color/darkgray1"
+            app:etStateColor="@{vm.uiState.chkpwState}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_pw_chk_label" />
+
+        <TextView
+            android:id="@+id/tv_pw_chk_warning"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="비밀번호를 확인해주세요"
+            android:textColor="@color/red"
+            app:helperMessage="@{vm.uiState.chkpwState}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_pw_chk" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_login"
@@ -101,34 +138,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:background="@color/darkgray2"
-            android:onClick="@{() -> vm.login()}"
-            android:text="로그인하기"
+            android:text="회원가입 완료"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_pw" />
-
-        <TextView
-            android:id="@+id/btn_find_id_pw"
-            style="@style/TextSmallBold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:onClick="@{() -> vm.navigateToFindAccount()}"
-            android:text="ID/PW 찾기"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_login" />
-
-        <TextView
-            android:id="@+id/btn_signup"
-            style="@style/TextSmallBold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:onClick="@{() -> vm.navigateToSignUp()}"
-            android:text="회원가입"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_login" />
-
+            app:layout_constraintTop_toBottomOf="@id/et_pw_chk" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
