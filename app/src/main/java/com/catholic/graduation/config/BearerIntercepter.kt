@@ -3,7 +3,6 @@ package com.catholic.graduation.config
 import android.content.Intent
 import com.catholic.graduation.app.App
 import com.catholic.graduation.app.DataStoreManager
-import com.catholic.graduation.data.model.BaseState
 import com.catholic.graduation.data.model.response.RefreshTokenResponse
 import com.catholic.graduation.data.model.runRemote
 //import com.catholic.graduation.data.remote.RefreshApi

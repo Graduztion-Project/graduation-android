@@ -4,29 +4,23 @@ import android.util.Log
 import com.catholic.graduation.presentation.util.Constants.TAG
 import com.google.gson.Gson
 import retrofit2.Response
+import java.lang.RuntimeException
 
-sealed class BaseState<out T> {
-    data class Success<out T>(val body: T) : BaseState<T>()
-    data class Error(val msg: String, val code: String) : BaseState<Nothing>()
-}
-
-
-
-suspend fun <T> runRemote(block: suspend () -> Response<T>): BaseState<T> {
+suspend fun <T> runRemote(block: suspend () -> Response<T>): Result<T> {
     return try {
         val response = block()
         if (response.isSuccessful) {
             response.body()?.let {
-                BaseState.Success(it)
+                Result.success(it)
             } ?: run {
-                BaseState.Error("응답이 비어있습니다", "EMPTY")
+                Result.failure(NullPointerException("Response body is null"))
             }
         } else {
             val error = Gson().fromJson(response.errorBody()?.string(), ErrorResponse::class.java)
-            BaseState.Error(error.message, error.code)
+            Result.failure(RuntimeException("Response error: $error"))
         }
     } catch (e: Exception) {
         Log.d(TAG, e.message.toString())
-        BaseState.Error("네트워크 통신 에러", "EMPTY")
+        Result.failure(e)
     }
 }

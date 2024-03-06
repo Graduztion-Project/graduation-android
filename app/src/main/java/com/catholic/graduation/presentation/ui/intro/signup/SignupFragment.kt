@@ -32,7 +32,10 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(R.layout.fragment_sig
     private fun initEventObserve() {
         repeatOnStarted {
             viewModel.event.collect{
-
+                when(it){
+                    SignupEvent.NavigateToBack -> findNavController().navigateUp()
+                    is SignupEvent.ShowToastMessage -> showToastMessage(it.msg)
+                }
             }
         }
     }
