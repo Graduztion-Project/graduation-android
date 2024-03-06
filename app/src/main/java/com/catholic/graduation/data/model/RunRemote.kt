@@ -17,6 +17,7 @@ suspend fun <T> runRemote(block: suspend () -> Response<T>): Result<T> {
             }
         } else {
             val error = Gson().fromJson(response.errorBody()?.string(), ErrorResponse::class.java)
+            Log.d(TAG, error.toString())
             Result.failure(RuntimeException("Response error: $error"))
         }
     } catch (e: Exception) {

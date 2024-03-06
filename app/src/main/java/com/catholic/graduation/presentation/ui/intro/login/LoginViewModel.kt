@@ -2,6 +2,9 @@ package com.catholic.graduation.presentation.ui.intro.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.catholic.graduation.app.DataStoreManager
+import com.catholic.graduation.data.model.request.LoginRequest
+import com.catholic.graduation.data.repository.IntroRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +22,10 @@ sealed class LoginEvent {
 }
 
 @HiltViewModel
-class LoginViewModel @Inject constructor() : ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val repository: IntroRepository,
+    private val dataStoreManager: DataStoreManager
+) : ViewModel() {
     private val _event = MutableSharedFlow<LoginEvent>()
     val event: SharedFlow<LoginEvent> = _event.asSharedFlow()
 
@@ -28,8 +34,29 @@ class LoginViewModel @Inject constructor() : ViewModel() {
     val id = MutableStateFlow("")
     val pw = MutableStateFlow("")
 
-    fun login(){
-        // TODO 로그인 api 연결
+    fun login() {
+        viewModelScope.launch {
+            val body = LoginRequest(email = id.value,password = pw.value)
+            val result = repository.login(body)
+            result.fold(
+                onSuccess = {
+                    warningText.value = ""
+                    loginSuccess(it.accessToken, it.refreshToken)
+                    _event.emit(LoginEvent.GoToMainActivity)
+                },
+                onFailure = {
+                    warningText.value = "계정 정보를 확인해주세요"
+                }
+            )
+        }
+    }
+
+    private fun loginSuccess(access: String, refresh: String) {
+        viewModelScope.launch {
+            dataStoreManager.putAccessToken(access)
+            dataStoreManager.putRefreshToken(refresh)
+            _event.emit(LoginEvent.GoToMainActivity)
+        }
     }
 
     fun navigateToFindAccount() {
