@@ -29,7 +29,8 @@ class LoginViewModel @Inject constructor(
     private val _event = MutableSharedFlow<LoginEvent>()
     val event: SharedFlow<LoginEvent> = _event.asSharedFlow()
 
-    val warningText = MutableStateFlow("")
+    val idWarningText = MutableStateFlow("")
+    val pwWarningText = MutableStateFlow("")
 
     val id = MutableStateFlow("")
     val pw = MutableStateFlow("")
@@ -40,12 +41,14 @@ class LoginViewModel @Inject constructor(
             val result = repository.login(body)
             result.fold(
                 onSuccess = {
-                    warningText.value = ""
+                    idWarningText.value = ""
                     loginSuccess(it.accessToken, it.refreshToken)
                     _event.emit(LoginEvent.GoToMainActivity)
                 },
                 onFailure = {
-                    warningText.value = "계정 정보를 확인해주세요"
+                    // todo 아이디, 비밀번호 오류 구분
+                    idWarningText.value = "계정 정보를 확인해주세요"
+                    pwWarningText.value = "비밀번호를 확인해주세요"
                 }
             )
         }

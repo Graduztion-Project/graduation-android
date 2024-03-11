@@ -52,7 +52,7 @@
             android:id="@+id/tv_text_warning"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="계정 정보를 다시 확인해주세요"
+            android:text="이메일 형식을 지켜주세요"
             android:textColor="@color/red"
             app:helperMessage="@{vm.uiState.idState}"
             app:layout_constraintEnd_toEndOf="parent"
@@ -83,6 +83,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_pw_label" />
+
+        <TextView
+            android:id="@+id/tv_pw_warning"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="비밀번호가 적절하지 않습니다"
+            android:textColor="@color/red"
+            app:helperMessage="@{vm.uiState.pwState}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_pw" />
 
         <TextView
             android:id="@+id/tv_pw_chk_label"
