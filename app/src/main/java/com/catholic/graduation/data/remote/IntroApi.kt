@@ -10,12 +10,12 @@ import retrofit2.http.POST
 
 interface IntroApi {
 
-    @POST("/join")
+    @POST("/account/join")
     suspend fun signUp(
         @Body params:SignUpRequest
     ): Response<ResponseBody>
 
-    @POST("/login")
+    @POST("/account/login")
     suspend fun login(
         @Body params:LoginRequest
     ): Response<LoginResponse>
