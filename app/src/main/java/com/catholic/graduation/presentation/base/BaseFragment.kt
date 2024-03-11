@@ -63,6 +63,11 @@ abstract class BaseFragment<B : ViewDataBinding>(
         toast.show()
     }
 
+    fun showLongToastMessage(message: String) {
+        val toast = Toast.makeText(activity, message, Toast.LENGTH_LONG)
+        toast.show()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         if (loadingState) {
