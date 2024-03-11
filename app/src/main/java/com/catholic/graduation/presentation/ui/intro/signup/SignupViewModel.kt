@@ -191,7 +191,7 @@ class SignupViewModel @Inject constructor(
 
     companion object {
         private const val REGEX_EMAIL = "^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+\$"
-        private const val REGEX_PWD = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%^&*()\\-+]).{8,15}$"
+        private const val REGEX_PWD = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%^&*()\\-+]).{9,22}$"
     }
 
 }
