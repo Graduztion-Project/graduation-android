@@ -48,6 +48,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_id_label" />
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_signup_email_check"
+            style="@style/TextSmallBold"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginEnd="5dp"
+            android:background="@color/darkgray2"
+            android:text="중복확인"
+            android:textColor="@color/white"
+            android:enabled="@{vm.idAvailable ? true : false }"
+            android:onClick="@{() -> vm.emailCheck()}"
+            app:layout_constraintEnd_toEndOf="@id/et_id"
+            app:layout_constraintTop_toTopOf="@id/et_id" />
+
         <TextView
             android:id="@+id/tv_text_warning"
             android:layout_width="0dp"
@@ -139,8 +153,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:background="@color/darkgray2"
-            android:text="회원가입 완료"
             android:onClick="@{()->vm.completeSignup()}"
+            android:text="회원가입 완료"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/et_pw_chk" />

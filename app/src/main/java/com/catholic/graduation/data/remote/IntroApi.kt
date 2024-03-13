@@ -1,5 +1,6 @@
 package com.catholic.graduation.data.remote
 
+import com.catholic.graduation.data.model.request.DuplicateRequest
 import com.catholic.graduation.data.model.request.LoginRequest
 import com.catholic.graduation.data.model.request.SignUpRequest
 import com.catholic.graduation.data.model.response.LoginResponse
@@ -12,12 +13,17 @@ interface IntroApi {
 
     @POST("/account/join")
     suspend fun signUp(
-        @Body params:SignUpRequest
+        @Body params: SignUpRequest
     ): Response<ResponseBody>
 
     @POST("/account/login")
     suspend fun login(
-        @Body params:LoginRequest
+        @Body params: LoginRequest
     ): Response<LoginResponse>
+
+    @POST("/account/email/duplicate")
+    suspend fun duplicate(
+        @Body params: DuplicateRequest
+    ): Response<ResponseBody>
 
 }

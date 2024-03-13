@@ -2,6 +2,7 @@ package com.catholic.graduation.presentation.ui.intro.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.catholic.graduation.data.model.request.DuplicateRequest
 import com.catholic.graduation.data.model.request.SignUpRequest
 import com.catholic.graduation.data.repository.IntroRepository
 import com.catholic.graduation.presentation.ui.InputState
@@ -45,7 +46,9 @@ class SignupViewModel @Inject constructor(
     val id = MutableStateFlow("")
     val pw = MutableStateFlow("")
     val pwChk = MutableStateFlow("")
-    private val idAvailable = MutableStateFlow(false)
+    private var checkedEmail = ""
+    val idAvailable = MutableStateFlow(false)
+    val duplicateAvailable = MutableStateFlow(false)
     private val pwAvailable = MutableStateFlow(false)
     private val pwChkAvailable = MutableStateFlow(false)
 
@@ -69,10 +72,11 @@ class SignupViewModel @Inject constructor(
                 if (isIdValid(id.value)) {
                     _uiState.update { state ->
                         state.copy(
-                            idState = InputState.Success("적합한 아이디 입니다")
+                            idState = InputState.Success("이메일 중복을 확인해주세요")
                         )
                     }
                     idAvailable.value = true
+                    duplicateAvailable.value = false
                 } else {
                     _uiState.update { state ->
                         state.copy(
@@ -80,6 +84,7 @@ class SignupViewModel @Inject constructor(
                         )
                     }
                     idAvailable.value = false
+                    duplicateAvailable.value = false
                 }
 
             } else {
@@ -89,6 +94,7 @@ class SignupViewModel @Inject constructor(
                     )
                 }
                 idAvailable.value = false
+                duplicateAvailable.value = false
             }
         }.launchIn(viewModelScope)
     }
@@ -151,6 +157,30 @@ class SignupViewModel @Inject constructor(
                 pwChkAvailable.value = false
             }
         }.launchIn(viewModelScope)
+    }
+
+    fun emailCheck() {
+        viewModelScope.launch {
+            val result = repository.duplicate(DuplicateRequest(id.value))
+            result.fold(
+                onSuccess = {
+                    _uiState.update { state ->
+                        state.copy(
+                            idState = InputState.Success("사용가능한 이메일입니다.")
+                        )
+                    }
+                    duplicateAvailable.value = true
+                    checkedEmail = id.value
+                },
+                onFailure = {
+                    _uiState.update { state ->
+                        state.copy(
+                            idState = InputState.Error("중복된 이메일입니다.")
+                        )
+                    }
+                }
+            )
+        }
     }
 
     fun completeSignup() {
