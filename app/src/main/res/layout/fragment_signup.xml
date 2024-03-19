@@ -102,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:backgroundTint="@color/darkgray2"
-                android:hint="입력코드 6자리 입력"
+                android:hint="인증코드 6자리 입력"
                 android:inputType="numberDecimal"
                 android:text="@={vm.code}"
                 android:textColorHint="@color/darkgray1"
