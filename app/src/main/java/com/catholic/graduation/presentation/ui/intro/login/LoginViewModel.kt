@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 sealed class LoginEvent {
     data object NavigateToBack : LoginEvent()
-    data object NavigateToFindAccount : LoginEvent()
+    data object NavigateToFindPw : LoginEvent()
     data object NavigateToSignUp : LoginEvent()
     data object GoToMainActivity : LoginEvent()
     data class ShowToastMessage(val msg: String) : LoginEvent()
@@ -91,9 +91,9 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun navigateToFindAccount() {
+    fun navigateToFindPw() {
         viewModelScope.launch {
-            _event.emit(LoginEvent.NavigateToFindAccount)
+            _event.emit(LoginEvent.NavigateToFindPw)
         }
     }
 

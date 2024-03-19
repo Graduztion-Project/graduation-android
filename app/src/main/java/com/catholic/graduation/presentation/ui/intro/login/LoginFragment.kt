@@ -35,7 +35,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
                         startActivity(intent)
                     }
                     LoginEvent.NavigateToBack -> findNavController().navigateUp()
-                    LoginEvent.NavigateToFindAccount -> TODO()
+                    LoginEvent.NavigateToFindPw -> findNavController().toFindPw()
                     LoginEvent.NavigateToSignUp -> findNavController().toSignup()
                     is LoginEvent.ShowToastMessage -> showLongToastMessage(it.msg)
                 }
@@ -45,6 +45,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(R.layout.fragment_login
 
     private fun NavController.toSignup(){
         val action = LoginFragmentDirections.actionLoginFragmentToSignupFragment()
+        navigate(action)
+    }
+
+    private fun NavController.toFindPw(){
+        val action = LoginFragmentDirections.actionLoginFragmentToFindPasswordFragment()
         navigate(action)
     }
 
