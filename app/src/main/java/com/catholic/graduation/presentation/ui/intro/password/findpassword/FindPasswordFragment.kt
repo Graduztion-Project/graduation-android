@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.catholic.graduation.R
 import com.catholic.graduation.databinding.FragmentFindPasswordBinding
@@ -35,9 +36,15 @@ class FindPasswordFragment : BaseFragment<FragmentFindPasswordBinding>(R.layout.
                 when(it){
                     FindPasswordEvent.NavigateToBack -> findNavController().navigateUp()
                     is FindPasswordEvent.ShowToastMessage -> showToastMessage(it.msg)
+                    is FindPasswordEvent.NavigationToChangePw -> findNavController().toChangePw(it.token)
                 }
             }
         }
+    }
+
+    private fun NavController.toChangePw(token : String){
+        val action = FindPasswordFragmentDirections.actionFindPasswordFragmentToChangePasswordFragment(token)
+        navigate(action)
     }
 
 }

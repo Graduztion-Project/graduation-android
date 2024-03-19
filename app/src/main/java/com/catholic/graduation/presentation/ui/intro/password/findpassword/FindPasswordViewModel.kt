@@ -20,6 +20,7 @@ data class FindPasswordUiState(
 )
 
 sealed class FindPasswordEvent {
+    data class NavigationToChangePw(val token: String) : FindPasswordEvent()
     data object NavigateToBack : FindPasswordEvent()
     data class ShowToastMessage(val msg: String) : FindPasswordEvent()
 }
@@ -36,7 +37,7 @@ class FindPasswordViewModel @Inject constructor(
 
     val id = MutableStateFlow("")
     val code = MutableStateFlow("")
-    var realCode = "#@13)"
+    var realCode = "000727"
     var token = ""
 
     fun sendCode() {
@@ -57,7 +58,12 @@ class FindPasswordViewModel @Inject constructor(
     fun codeConfirm() {
         viewModelScope.launch {
             if (code.value == realCode) {
-                // todo ChangePasswordFragment로 전환
+                _uiState.update { state ->
+                    state.copy(
+                        codeTextVisible = false
+                    )
+                }
+                _event.emit(FindPasswordEvent.NavigationToChangePw(token))
             } else {
                 _uiState.update { state ->
                     state.copy(
