@@ -1,11 +1,13 @@
 package com.catholic.graduation.presentation.ui.intro.signup
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.catholic.graduation.data.model.request.EmailRequest
 import com.catholic.graduation.data.model.request.SignUpRequest
 import com.catholic.graduation.data.repository.IntroRepository
 import com.catholic.graduation.presentation.ui.InputState
+import com.catholic.graduation.presentation.util.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -179,6 +181,7 @@ class SignupViewModel @Inject constructor(
                     checkedEmail = id.value
                 },
                 onFailure = {
+                    Log.d(TAG, it.message.toString())
                     _uiState.update { state ->
                         state.copy(
                             idState = InputState.Error("중복된 이메일입니다.")
@@ -203,6 +206,7 @@ class SignupViewModel @Inject constructor(
                 },
                 onFailure = {
                     _event.emit(SignupEvent.ShowToastMessage("${it.message}"))
+                    Log.d(TAG, it.message.toString())
                 }
             )
         }
@@ -237,13 +241,14 @@ class SignupViewModel @Inject constructor(
                     },
                     onFailure = {
                         _event.emit(SignupEvent.ShowToastMessage(it.message ?: "Unknown error"))
+                        Log.d(TAG, it.message.toString())
                     }
                 )
             } else {
                 _event.emit(SignupEvent.ShowToastMessage("아이디, 비밀번호를 확인해주세요"))
             }
         }
-        navigateToBack()
+
     }
 
     private fun isIdValid(id: String): Boolean {
