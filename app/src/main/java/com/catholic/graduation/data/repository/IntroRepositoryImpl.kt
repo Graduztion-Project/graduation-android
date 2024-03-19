@@ -4,6 +4,7 @@ import com.catholic.graduation.data.model.request.EmailRequest
 import com.catholic.graduation.data.model.request.LoginRequest
 import com.catholic.graduation.data.model.request.SignUpRequest
 import com.catholic.graduation.data.model.response.LoginResponse
+import com.catholic.graduation.data.model.response.VerificationEmailResponse
 import com.catholic.graduation.data.model.runRemote
 import com.catholic.graduation.data.remote.IntroApi
 import okhttp3.ResponseBody
@@ -23,4 +24,7 @@ class IntroRepositoryImpl @Inject constructor(
 
     override suspend fun verification(body: EmailRequest): Result<String> =
         runRemote { api.verification(body) }
+
+    override suspend fun verificationEmail(body: EmailRequest): Result<VerificationEmailResponse> =
+        runRemote { api.verificationEmail(body) }
 }
