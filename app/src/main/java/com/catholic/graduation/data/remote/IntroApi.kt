@@ -1,6 +1,6 @@
 package com.catholic.graduation.data.remote
 
-import com.catholic.graduation.data.model.request.DuplicateRequest
+import com.catholic.graduation.data.model.request.EmailRequest
 import com.catholic.graduation.data.model.request.LoginRequest
 import com.catholic.graduation.data.model.request.SignUpRequest
 import com.catholic.graduation.data.model.response.LoginResponse
@@ -23,7 +23,12 @@ interface IntroApi {
 
     @POST("/account/email/duplicate")
     suspend fun duplicate(
-        @Body params: DuplicateRequest
+        @Body params: EmailRequest
     ): Response<ResponseBody>
+
+    @POST("/account/email/verification")
+    suspend fun verification(
+        @Body params: EmailRequest
+    ): Response<String>
 
 }

@@ -80,52 +80,64 @@
             android:layout_height="30dp"
             android:layout_marginTop="10dp"
             android:background="@color/darkgray2"
-            android:onClick="@{()->vm.completeSignup()}"
+            android:onClick="@{()->vm.emailConfirm()}"
             android:text="이메일 인증"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_text_warning"/>
 
-        <EditText
-            android:id="@+id/et_signup_code"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_signup_code"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:backgroundTint="@color/darkgray2"
-            android:hint="입력코드 6자리 입력"
-            android:inputType="numberDecimal"
-            android:text="@={vm.id}"
-            android:textColorHint="@color/darkgray1"
-            app:etStateColor="@{vm.uiState.idState}"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="@{vm.uiState.codeVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_signup_email_confirm" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_signup_code"
-            style="@style/TextSmallBold"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_marginEnd="5dp"
-            android:background="@color/darkgray2"
-            android:text="중복확인"
-            android:textColor="@color/white"
-            android:enabled="@{vm.idAvailable ? true : false }"
-            android:onClick="@{() -> vm.emailCheck()}"
-            app:layout_constraintEnd_toEndOf="@id/et_signup_code"
-            app:layout_constraintTop_toTopOf="@id/et_signup_code" />
-
-        <TextView
-            android:id="@+id/tv_signup_code"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="인증코드를 확인해주세요"
-            android:textColor="@color/red"
-            app:helperMessage="@{vm.uiState.idState}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/et_signup_code" />
+            app:layout_constraintTop_toBottomOf="@id/btn_signup_email_confirm">
+
+            <EditText
+                android:id="@+id/et_signup_code"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/darkgray2"
+                android:hint="입력코드 6자리 입력"
+                android:inputType="numberDecimal"
+                android:text="@={vm.code}"
+                android:textColorHint="@color/darkgray1"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_signup_code"
+                style="@style/TextSmallBold"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_marginEnd="5dp"
+                android:background="@color/darkgray2"
+                android:text="확인"
+                android:textColor="@color/white"
+                android:onClick="@{() -> vm.codeConfirm()}"
+                app:layout_constraintEnd_toEndOf="@id/et_signup_code"
+                app:layout_constraintTop_toTopOf="@id/et_signup_code" />
+
+            <TextView
+                android:id="@+id/tv_signup_code"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="인증코드를 확인해주세요"
+                android:textColor="@color/red"
+                app:helperMessage="@{vm.uiState.codeState}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_signup_code" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
         <TextView
             android:id="@+id/tv_pw_label"
@@ -135,7 +147,7 @@
             android:layout_marginTop="10dp"
             android:text="비밀번호"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_signup_code" />
+            app:layout_constraintTop_toBottomOf="@id/layout_signup_code" />
 
         <EditText
             android:id="@+id/et_pw"

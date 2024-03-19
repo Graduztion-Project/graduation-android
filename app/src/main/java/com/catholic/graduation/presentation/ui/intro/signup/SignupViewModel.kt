@@ -2,7 +2,7 @@ package com.catholic.graduation.presentation.ui.intro.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.catholic.graduation.data.model.request.DuplicateRequest
+import com.catholic.graduation.data.model.request.EmailRequest
 import com.catholic.graduation.data.model.request.SignUpRequest
 import com.catholic.graduation.data.repository.IntroRepository
 import com.catholic.graduation.presentation.ui.InputState
@@ -25,7 +25,9 @@ import javax.inject.Inject
 data class SignupUiState(
     val idState: InputState = InputState.Empty,
     val pwState: InputState = InputState.Empty,
-    val pwChkState: InputState = InputState.Empty
+    val pwChkState: InputState = InputState.Empty,
+    val codeState: InputState = InputState.Empty,
+    val codeVisible: Boolean = false
 )
 
 sealed class SignupEvent {
@@ -51,6 +53,10 @@ class SignupViewModel @Inject constructor(
     val duplicateAvailable = MutableStateFlow(false)
     private val pwAvailable = MutableStateFlow(false)
     private val pwChkAvailable = MutableStateFlow(false)
+
+    val code = MutableStateFlow("")
+    var realCode = -1
+
 
     val isDataReady = combine(idAvailable, pwAvailable, pwChkAvailable) { id, pw, pwChk ->
         id && pw && pwChk
@@ -161,7 +167,7 @@ class SignupViewModel @Inject constructor(
 
     fun emailCheck() {
         viewModelScope.launch {
-            val result = repository.duplicate(DuplicateRequest(id.value))
+            val result = repository.duplicate(EmailRequest(id.value))
             result.fold(
                 onSuccess = {
                     _uiState.update { state ->
@@ -183,23 +189,60 @@ class SignupViewModel @Inject constructor(
         }
     }
 
+    fun emailConfirm() {
+        viewModelScope.launch {
+            val result = repository.verification(EmailRequest(id.value))
+            result.fold(
+                onSuccess = {
+                    realCode = it.toInt()
+                    _uiState.update { state ->
+                        state.copy(
+                            codeVisible = true
+                        )
+                    }
+                },
+                onFailure = {
+                    _event.emit(SignupEvent.ShowToastMessage("${it.message}"))
+                }
+            )
+        }
+    }
+
+    fun codeConfirm(){
+        viewModelScope.launch {
+            if(code.value.toInt() == realCode){
+                _uiState.update { state ->
+                    state.copy(
+                        codeState = InputState.Success("인증 완료")
+                    )
+                }
+            }else{
+                _uiState.update { state ->
+                    state.copy(
+                        codeState = InputState.Error("인증 코드를 다시 확인해주세요")
+                    )
+                }
+            }
+        }
+    }
+
     fun completeSignup() {
-//        viewModelScope.launch {
-//            if (isDataReady.value) {
-//                val body = SignUpRequest(name = "test", email = id.value, password = pw.value)
-//                val result = repository.signUp(body)
-//                result.fold(
-//                    onSuccess = {body ->
-//                        navigateToBack()
-//                    },
-//                    onFailure = {
-//                        _event.emit(SignupEvent.ShowToastMessage(it.message ?: "Unknown error"))
-//                    }
-//                )
-//            } else {
-//                _event.emit(SignupEvent.ShowToastMessage("아이디, 비밀번호를 확인해주세요"))
-//            }
-//        }
+        viewModelScope.launch {
+            if (isDataReady.value) {
+                val body = SignUpRequest(name = "test", email = id.value, password = pw.value)
+                val result = repository.signUp(body)
+                result.fold(
+                    onSuccess = { body ->
+                        navigateToBack()
+                    },
+                    onFailure = {
+                        _event.emit(SignupEvent.ShowToastMessage(it.message ?: "Unknown error"))
+                    }
+                )
+            } else {
+                _event.emit(SignupEvent.ShowToastMessage("아이디, 비밀번호를 확인해주세요"))
+            }
+        }
         navigateToBack()
     }
 

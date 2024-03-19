@@ -1,5 +1,5 @@
 package com.catholic.graduation.data.model.request
 
-data class DuplicateRequest(
+data class EmailRequest(
     val email: String
 )
