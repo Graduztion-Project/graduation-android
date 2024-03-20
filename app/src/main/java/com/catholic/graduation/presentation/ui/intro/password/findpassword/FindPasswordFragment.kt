@@ -36,14 +36,14 @@ class FindPasswordFragment : BaseFragment<FragmentFindPasswordBinding>(R.layout.
                 when(it){
                     FindPasswordEvent.NavigateToBack -> findNavController().navigateUp()
                     is FindPasswordEvent.ShowToastMessage -> showToastMessage(it.msg)
-                    is FindPasswordEvent.NavigationToChangePw -> findNavController().toChangePw(it.token)
+                    is FindPasswordEvent.NavigationToChangePw -> findNavController().toChangePw(it.token, it.email)
                 }
             }
         }
     }
 
-    private fun NavController.toChangePw(token : String){
-        val action = FindPasswordFragmentDirections.actionFindPasswordFragmentToChangePasswordFragment(token)
+    private fun NavController.toChangePw(token : String, email : String){
+        val action = FindPasswordFragmentDirections.actionFindPasswordFragmentToChangePasswordFragment(token, email)
         navigate(action)
     }
 

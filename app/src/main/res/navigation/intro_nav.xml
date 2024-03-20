@@ -30,6 +30,9 @@
             <argument
                 android:name="verificationToken"
                 app:argType="string"/>
+            <argument
+                android:name="email"
+                app:argType="string"/>
         </action>
     </fragment>
     <fragment

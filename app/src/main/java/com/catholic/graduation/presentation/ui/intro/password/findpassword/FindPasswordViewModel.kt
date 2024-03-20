@@ -20,7 +20,7 @@ data class FindPasswordUiState(
 )
 
 sealed class FindPasswordEvent {
-    data class NavigationToChangePw(val token: String) : FindPasswordEvent()
+    data class NavigationToChangePw(val token: String, val email: String) : FindPasswordEvent()
     data object NavigateToBack : FindPasswordEvent()
     data class ShowToastMessage(val msg: String) : FindPasswordEvent()
 }
@@ -63,7 +63,7 @@ class FindPasswordViewModel @Inject constructor(
                         codeTextVisible = false
                     )
                 }
-                _event.emit(FindPasswordEvent.NavigationToChangePw(token))
+                _event.emit(FindPasswordEvent.NavigationToChangePw(token, id.value))
             } else {
                 _uiState.update { state ->
                     state.copy(
