@@ -5,4 +5,6 @@
     <color name="red">#FFE64646</color>
     <color name="darkgray1">#6F6F6F</color>
     <color name="darkgray2">#3D3D3D</color>
+
+    <color name="mainback">#E9E9E9</color>
 </resources>

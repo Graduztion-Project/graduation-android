@@ -39,51 +39,48 @@ class LoginViewModel @Inject constructor(
 
     fun login() {
         viewModelScope.launch {
-            val body = LoginRequest(email = id.value, password = pw.value)
-            val result = repository.login(body)
-            result.fold(
-                onSuccess = {
-                    idWarningText.value = ""
-                    pwWarningText.value = ""
-                    loginSuccess(it.accessToken, it.refreshToken)
-                    _event.emit(LoginEvent.GoToMainActivity)
-                },
-                onFailure = { throwable ->
-                    when (throwable) {
-                        is LoginError -> {
-                            when (throwable.errorCode) {
-                                "EmailNotFound" -> {
-                                    idWarningText.value = "존재하지 않는 계정입니다"
-                                    pwWarningText.value = ""
-                                }
-
-                                "IncorrectPassword" -> {
-                                    idWarningText.value = ""
-                                    pwWarningText.value = "비밀번호가 일치하지 않습니다"
-                                }
-
-                                "AccountLocked" -> {
-                                    idWarningText.value = "계정이 잠겼습니다"
-                                    pwWarningText.value = ""
-                                    _event.emit(
-                                        LoginEvent.ShowToastMessage(
-                                            "남은 시간 -> ${
-                                                modifyTime(
-                                                    throwable.lockTimeRemainingMillis!!
-                                                )
-                                            }"
-                                        )
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    // todo 아이디, 비밀번호 오류 구분
-                    idWarningText.value = "계정 정보를 확인해주세요"
-                    pwWarningText.value = "비밀번호를 확인해주세요"
-
-                }
-            )
+            _event.emit(LoginEvent.GoToMainActivity)
+//            val body = LoginRequest(email = id.value, password = pw.value)
+//            val result = repository.login(body)
+//            result.fold(
+//                onSuccess = {
+//                    idWarningText.value = ""
+//                    pwWarningText.value = ""
+//                    loginSuccess(it.accessToken, it.refreshToken)
+//                    _event.emit(LoginEvent.GoToMainActivity)
+//                },
+//                onFailure = { throwable ->
+//                    when (throwable) {
+//                        is LoginError -> {
+//                            when (throwable.errorCode) {
+//                                "EmailNotFound" -> {
+//                                    idWarningText.value = "존재하지 않는 계정입니다"
+//                                    pwWarningText.value = ""
+//                                }
+//
+//                                "IncorrectPassword" -> {
+//                                    idWarningText.value = ""
+//                                    pwWarningText.value = "비밀번호가 일치하지 않습니다"
+//                                }
+//
+//                                "AccountLocked" -> {
+//                                    idWarningText.value = "계정이 잠겼습니다"
+//                                    pwWarningText.value = ""
+//                                    _event.emit(
+//                                        LoginEvent.ShowToastMessage(
+//                                            "남은 시간 -> ${
+//                                                modifyTime(
+//                                                    throwable.lockTimeRemainingMillis!!
+//                                                )
+//                                            }"
+//                                        )
+//                                    )
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            )
         }
     }
 
