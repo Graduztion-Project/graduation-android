@@ -37,49 +37,53 @@ class LoginViewModel @Inject constructor(
     val id = MutableStateFlow("")
     val pw = MutableStateFlow("")
 
-    val failureCount = MutableStateFlow(0)
-
-    private fun startLoginTimer() {
-        viewModelScope.launch {
-            for(time in 300 downTo 0) {
-                val minutes = time / 60
-                val seconds = time % 60
-                loginBtnText.value = String.format("%02d:%02d", minutes, seconds)
-                delay(1000) // 1초 대기
-            }
-            // 타이머가 끝나면 로그인 버튼의 텍스트와 실패 횟수를 초기화
-            loginBtnText.value = "로그인하기"
-            failureCount.value = 0
-        }
-    }
-
     fun login() {
         viewModelScope.launch {
-            if (failureCount.value >= 5) {
-                _event.emit(LoginEvent.ShowToastMessage("로그인 시도가 일시적으로 제한되었습니다. 잠시 후 다시 시도해 주세요"))
-            } else {
-                val body = LoginRequest(email = id.value, password = pw.value)
-                val result = repository.login(body)
-                result.fold(
-                    onSuccess = {
-                        idWarningText.value = ""
-                        pwWarningText.value = ""
-                        failureCount.value = 0
-                        loginSuccess(it.accessToken, it.refreshToken)
-                        _event.emit(LoginEvent.GoToMainActivity)
-                    },
-                    onFailure = {
-                        // todo 아이디, 비밀번호 오류 구분
-                        failureCount.value += 1
-                        idWarningText.value = "계정 정보를 확인해주세요"
-                        pwWarningText.value = "비밀번호를 확인해주세요"
+            val body = LoginRequest(email = id.value, password = pw.value)
+            val result = repository.login(body)
+            result.fold(
+                onSuccess = {
+                    idWarningText.value = ""
+                    pwWarningText.value = ""
+                    loginSuccess(it.accessToken, it.refreshToken)
+                    _event.emit(LoginEvent.GoToMainActivity)
+                },
+                onFailure = { throwable ->
+                    when (throwable) {
+                        is LoginError -> {
+                            when (throwable.errorCode) {
+                                "EmailNotFound" -> {
+                                    idWarningText.value = "존재하지 않는 계정입니다"
+                                    pwWarningText.value = ""
+                                }
 
-                        if (failureCount.value == 5) {
-                            startLoginTimer()
+                                "IncorrectPassword" -> {
+                                    idWarningText.value = ""
+                                    pwWarningText.value = "비밀번호가 일치하지 않습니다"
+                                }
+
+                                "AccountLocked" -> {
+                                    idWarningText.value = "계정이 잠겼습니다"
+                                    pwWarningText.value = ""
+                                    _event.emit(
+                                        LoginEvent.ShowToastMessage(
+                                            "남은 시간 -> ${
+                                                modifyTime(
+                                                    throwable.lockTimeRemainingMillis!!
+                                                )
+                                            }"
+                                        )
+                                    )
+                                }
+                            }
                         }
                     }
-                )
-            }
+                    // todo 아이디, 비밀번호 오류 구분
+                    idWarningText.value = "계정 정보를 확인해주세요"
+                    pwWarningText.value = "비밀번호를 확인해주세요"
+
+                }
+            )
         }
     }
 
@@ -109,4 +113,17 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    private fun modifyTime(time: Long): String {
+        val min = (time / 1000) / 60
+        val sec = (time / 1000) % 60
+        val formattedTime = String.format("%d분 %02d초", min, sec)
+        return formattedTime
+    }
+
 }
+
+class LoginError(
+    val errorCode: String,
+    val errorDescription: String,
+    val lockTimeRemainingMillis: Long? = null
+) : Exception(errorDescription)
