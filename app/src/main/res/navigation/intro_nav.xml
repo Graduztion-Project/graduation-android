@@ -13,7 +13,7 @@
             app:destination="@id/signup_fragment" />
         <action
             android:id="@+id/action_login_fragment_to_findPasswordFragment"
-            app:destination="@id/findPassword_fragment" />
+            app:destination="@id/findPasswordFragment" />
     </fragment>
 
     <fragment
@@ -21,23 +21,24 @@
         android:name="com.catholic.graduation.presentation.ui.intro.signup.SignupFragment"
         android:label="signup" />
     <fragment
-        android:id="@+id/findPassword_fragment"
+        android:id="@+id/findPasswordFragment"
         android:name="com.catholic.graduation.presentation.ui.intro.password.findpassword.FindPasswordFragment"
         android:label="FindPassword" >
         <action
             android:id="@+id/action_findPassword_fragment_to_changePassword_Fragment"
-            app:destination="@id/changePassword_Fragment">
-            <argument
-                android:name="verificationToken"
-                app:argType="string"/>
-            <argument
-                android:name="email"
-                app:argType="string"/>
-        </action>
+            app:destination="@id/changePassword_Fragment"/>
+
     </fragment>
     <fragment
         android:id="@+id/changePassword_Fragment"
         android:name="com.catholic.graduation.presentation.ui.intro.password.changepassword.ChangePasswordFragment"
-        android:label="ChangePassword" />
+        android:label="ChangePassword">
+        <argument
+            android:name="verificationToken"
+            app:argType="string"/>
+        <argument
+            android:name="email"
+            app:argType="string"/>
+    </fragment>
 
 </navigation>

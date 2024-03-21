@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.catholic.graduation.R
 import com.catholic.graduation.databinding.FragmentChangePasswordBinding
 import com.catholic.graduation.databinding.FragmentFindPasswordBinding
@@ -17,14 +18,21 @@ import com.catholic.graduation.presentation.ui.intro.password.findpassword.FindP
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(R.layout.fragment_change_password) {
+class ChangePasswordFragment :
+    BaseFragment<FragmentChangePasswordBinding>(R.layout.fragment_change_password) {
 
-    private val viewModel : ChangePasswordViewModel by viewModels()
+    private val viewModel: ChangePasswordViewModel by viewModels()
+
+    private val args: ChangePasswordFragmentArgs by navArgs()
+    private val email by lazy { args.email }
+    private val token by lazy { args.verificationToken }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.vm = viewModel
+        viewModel.setEmailToken(email, token)
+
         initEventObserve()
 
     }

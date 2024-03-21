@@ -2,6 +2,7 @@ package com.catholic.graduation.presentation.ui.intro.password.changepassword
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.catholic.graduation.data.model.request.RenwalRequest
 import com.catholic.graduation.data.repository.IntroRepository
 import com.catholic.graduation.presentation.ui.InputState
 import com.catholic.graduation.presentation.ui.intro.password.findpassword.FindPasswordEvent
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class ChangePasswordUiState(
@@ -45,9 +47,17 @@ class ChangePasswordViewModel @Inject constructor(
     private val pwAvailable = MutableStateFlow(false)
     private val pwChkAvailable = MutableStateFlow(false)
 
+    private var email = ""
+    private var token = ""
+
     init {
         pwObserve()
         pwChkObserve()
+    }
+
+    fun setEmailToken(email: String, token: String) {
+        this.email = email
+        this.token = token
     }
 
     private fun pwObserve() {
@@ -108,6 +118,21 @@ class ChangePasswordViewModel @Inject constructor(
                 pwChkAvailable.value = false
             }
         }.launchIn(viewModelScope)
+    }
+
+    fun complete() {
+        viewModelScope.launch {
+            val body = RenwalRequest(email, pw.value, token)
+            val result = repository.renwal(body)
+            result.fold(
+                onSuccess = {
+                    // todo 로그인으로 돌아가기
+                },
+                onFailure = {
+                    // todo 에러 띄우기
+                }
+            )
+        }
     }
 
     private fun isPasswordValid(pw: String): Boolean {

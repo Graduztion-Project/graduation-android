@@ -2,6 +2,7 @@ package com.catholic.graduation.data.repository
 
 import com.catholic.graduation.data.model.request.EmailRequest
 import com.catholic.graduation.data.model.request.LoginRequest
+import com.catholic.graduation.data.model.request.RenwalRequest
 import com.catholic.graduation.data.model.request.SignUpRequest
 import com.catholic.graduation.data.model.response.LoginResponse
 import com.catholic.graduation.data.model.response.VerificationEmailResponse
@@ -28,5 +29,9 @@ interface IntroRepository {
     suspend fun verificationEmail(
         body: EmailRequest
     ): Result<VerificationEmailResponse>
+
+    suspend fun renwal(
+        body: RenwalRequest
+    ): Result<ResponseBody>
 
 }

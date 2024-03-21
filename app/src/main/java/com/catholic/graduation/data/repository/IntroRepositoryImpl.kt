@@ -2,6 +2,7 @@ package com.catholic.graduation.data.repository
 
 import com.catholic.graduation.data.model.request.EmailRequest
 import com.catholic.graduation.data.model.request.LoginRequest
+import com.catholic.graduation.data.model.request.RenwalRequest
 import com.catholic.graduation.data.model.request.SignUpRequest
 import com.catholic.graduation.data.model.response.LoginResponse
 import com.catholic.graduation.data.model.response.VerificationEmailResponse
@@ -27,4 +28,8 @@ class IntroRepositoryImpl @Inject constructor(
 
     override suspend fun verificationEmail(body: EmailRequest): Result<VerificationEmailResponse> =
         runRemote { api.verificationEmail(body) }
+
+    override suspend fun renwal(body: RenwalRequest): Result<ResponseBody> =
+        runRemote { api.renwal(body) }
+
 }
